@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">KotlinMessenger</string>
     <string name="login">Login</string>
+    <string name="select_photo">SELECT\nPHOTO</string>
 </resources>
