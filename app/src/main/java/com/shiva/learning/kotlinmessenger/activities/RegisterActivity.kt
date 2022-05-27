@@ -1,4 +1,4 @@
-package com.shiva.learning.kotlinmessenger
+package com.shiva.learning.kotlinmessenger.activities
 
 import com.shiva.learning.kotlinmessenger.support.Progress
 import android.net.Uri
@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import com.shiva.learning.kotlinmessenger.R
 import com.shiva.learning.kotlinmessenger.databinding.ActivityRegisterBinding
 import com.shiva.learning.kotlinmessenger.support.Util
 import java.util.*

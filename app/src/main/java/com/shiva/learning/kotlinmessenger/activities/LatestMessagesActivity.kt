@@ -1,4 +1,4 @@
-package com.shiva.learning.kotlinmessenger
+package com.shiva.learning.kotlinmessenger.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
+import com.shiva.learning.kotlinmessenger.R
 import com.shiva.learning.kotlinmessenger.databinding.ActivityLatestMessagesBinding
 
 class LatestMessagesActivity : AppCompatActivity() {

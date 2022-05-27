@@ -1,4 +1,4 @@
-package com.shiva.learning.kotlinmessenger
+package com.shiva.learning.kotlinmessenger.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
