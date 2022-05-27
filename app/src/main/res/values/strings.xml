@@ -2,4 +2,7 @@
     <string name="app_name">KotlinMessenger</string>
     <string name="login">Login</string>
     <string name="select_photo">SELECT\nPHOTO</string>
+    <string name="Registering_User">Registering user</string>
+    <string name="uploading_image">Uploading image</string>
+    <string name="select_user">Select user</string>
 </resources>

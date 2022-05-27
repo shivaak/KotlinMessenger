@@ -1,20 +1,17 @@
 package com.shiva.learning.kotlinmessenger
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
+import com.shiva.learning.kotlinmessenger.support.Progress
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.shiva.learning.kotlinmessenger.databinding.ActivityRegisterBinding
+import com.shiva.learning.kotlinmessenger.support.Util
 import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -26,6 +23,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding : ActivityRegisterBinding
     private lateinit var auth: FirebaseAuth
     private var selectedUri: Uri? = null
+
+    private var progress: Progress? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +38,8 @@ class RegisterActivity : AppCompatActivity() {
             performRegister()
         }
 
-        binding.txtAccountLogin.setOnClickListener{
-            Log.d(TAG,"Already having account link clicked")
-            var intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+        binding.txtBackToLogin.setOnClickListener{
+           finish()
         }
 
         binding.btnProfilePictSelect.setOnClickListener{
@@ -68,6 +65,7 @@ class RegisterActivity : AppCompatActivity() {
             showToast("Username or password or profile pict is empty")
             return
         }
+        setProgressDialogVisibility(true)
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this){
                 if (it.isSuccessful) {
@@ -75,13 +73,12 @@ class RegisterActivity : AppCompatActivity() {
                     Log.d(TAG, "createUserWithEmail:success")
 //                    val user = auth.currentUser
                     uploadImageToFireBaseStorage()
-                    //updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", it.exception)
                     Toast.makeText(baseContext, "Create user failed. ${it.exception?.message}",
                         Toast.LENGTH_SHORT).show()
-                    //updateUI(null)
+                    setProgressDialogVisibility(false)
                 }
 
             }
@@ -92,6 +89,8 @@ class RegisterActivity : AppCompatActivity() {
         else {
             val filename = UUID.randomUUID().toString()
             val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+
+            progress?.setProgressMessage(R.string.uploading_image)
             // !! unwrapping it
             ref.putFile(selectedUri!!)
                 .addOnSuccessListener {
@@ -102,6 +101,7 @@ class RegisterActivity : AppCompatActivity() {
                 }
                 .addOnFailureListener{
                     Log.d(TAG, "uploadImageToFireBaseStorage:failed")
+                    setProgressDialogVisibility(false)
                 }
         }
     }
@@ -115,14 +115,22 @@ class RegisterActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 Log.d(TAG, "addUserInformationToFirebaseDB:success")
                 showToast("User registered successfully")
+                setProgressDialogVisibility(false)
+                finish()
             }
             .addOnFailureListener{
                 Log.e(TAG, it.message.toString())
+                setProgressDialogVisibility(false)
             }
     }
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun setProgressDialogVisibility(visible: Boolean) {
+        if (visible) progress = Progress(this, R.string.Registering_User, cancelable = false)
+        progress?.apply { if (visible) show() else dismiss() }
     }
 }
 

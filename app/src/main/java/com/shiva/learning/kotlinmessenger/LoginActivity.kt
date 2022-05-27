@@ -1,10 +1,12 @@
 package com.shiva.learning.kotlinmessenger
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.shiva.learning.kotlinmessenger.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -25,7 +27,9 @@ class LoginActivity : AppCompatActivity() {
 
 
         binding.txtBack.setOnClickListener{
-            finish()
+            Log.d(TAG,"Register account link clicked")
+            var intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
         binding.btnLogin.setOnClickListener { performLogin() }
@@ -42,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, "Authentication Successful.",
                         Toast.LENGTH_SHORT).show()
                     val user = auth.currentUser
-                   // updateUI(user)
+                    openLatestMessages(user)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -51,5 +55,12 @@ class LoginActivity : AppCompatActivity() {
                     //updateUI(null)
                 }
             }
+    }
+
+    private fun openLatestMessages(user: FirebaseUser?) {
+        val intent = Intent(this, LatestMessagesActivity::class.java)
+        //clearing all activity stack before opening this new activity
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }
